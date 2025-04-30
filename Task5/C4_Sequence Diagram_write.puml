@@ -1,0 +1,24 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Sequence.puml
+
+Container(client, "Client", "", "")
+
+System_Boundary(b, "Jewerly Store System")
+  Container(mesapi, "MES API", "", "")
+  Container(redis, "Redis", "", "")
+  Container(mesdb, "Mes db", "", "")
+  Container(mesqueue, "Mes db", "", "")
+  Container(crmapi, "CRM API", "", "")
+  Container(crmdb, "CRM db", "", "")
+Boundary_End()
+
+Rel(client, mesapi, "Update order", "JSON/HTTPS")
+Rel(mesapi, redis, "Update order in Redis")
+Rel(mesapi, mesdb, "Update order in DB")
+Rel(mesapi, mesqueue, "Publish order to queue")
+Rel(mesqueue, crmapi, "Listen order from queue")
+Rel(crmapi, redis, "Read order from redis")
+Rel(crmapi, crmdb, "Update order in DB")
+
+SHOW_LEGEND()
+@enduml
